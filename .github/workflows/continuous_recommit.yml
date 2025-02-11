@@ -6,7 +6,7 @@ on:
       - main  # Runs whenever a new commit is pushed
   workflow_dispatch:  # Allows manual execution
   schedule:
-    - cron: "*/5 * * * *"  # Runs every 5 minutes
+    - cron: "*/1 * * * *"  # Runs every 5 minutes
 
 jobs:
   auto-recommit:
@@ -18,7 +18,7 @@ jobs:
           persist-credentials: false
 
       - name: Wait for 5 Minutes
-        run: sleep 300  # Waits 5 minutes (300 seconds)
+        run: sleep 60  # Waits 5 minutes (300 seconds)
 
       - name: Set Up Git Config (harshkumar.prasad@straive.com)
         run: |
