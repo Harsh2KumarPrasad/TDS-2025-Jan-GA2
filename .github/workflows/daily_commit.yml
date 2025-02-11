@@ -10,19 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # Disables default GitHub authentication
 
-      - name: Set Up Git Config (harshkumar.prasad@straive.com)
+      - name: Set Up Git Config
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "harshkumar.prasad@straive.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create or Update a File
         run: |
           echo "Last update: $(date)" > daily_update.txt
           git add daily_update.txt
-          git commit -m "Automated daily update - $(date)"
-          git push
+          git commit -m "Automated daily update - $(date)" || echo "No changes to commit"
+
+      - name: Push Changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git push https://x-access-token:$GH_TOKEN@github.com/Harsh2KumarPrasad/TDS-2025-Jan-GA2.git main
 
       - name: Confirm Commit
         run: git log -1
