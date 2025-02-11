@@ -6,7 +6,7 @@ on:
       - main  # Runs whenever a new commit is pushed
   workflow_dispatch:  # Allows manual execution
   schedule:
-    - cron: "*/4 * * * *"  # Runs every 4 minutes
+    - cron: "*/5 * * * *"  # Runs every 5 minutes
 
 jobs:
   auto-recommit:
@@ -17,13 +17,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Wait for 4 Minutes
-        run: sleep 240  
+      - name: Wait for 5 Minutes
+        run: sleep 300  # Waits 5 minutes (300 seconds)
 
       - name: Set Up Git Config (harshkumar.prasad@straive.com)
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "harshkumar.prasad@straive.com"
+
+      - name: Pull Latest Changes
+        run: |
+          git pull --rebase https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Harsh2KumarPrasad/TDS-2025-Jan-GA2.git main
 
       - name: Update a File
         run: |
