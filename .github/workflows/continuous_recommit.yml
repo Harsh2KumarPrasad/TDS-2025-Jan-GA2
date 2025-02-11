@@ -1,0 +1,38 @@
+name: Continuous 5-Min Recommit
+
+on:
+  push:
+    branches:
+      - main  # Runs whenever a new commit is pushed
+  workflow_dispatch:  # Allows manual execution
+  schedule:
+    - cron: "*/4 * * * *"  # Runs every 4 minutes
+
+jobs:
+  auto-recommit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Wait for 4 Minutes
+        run: sleep 240  
+
+      - name: Set Up Git Config (harshkumar.prasad@straive.com)
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "harshkumar.prasad@straive.com"
+
+      - name: Update a File
+        run: |
+          echo "Auto-recommit update: $(date)" > auto_update.txt
+          git add auto_update.txt
+          git commit -m "Automated recommit - $(date)" --allow-empty
+
+      - name: Push Changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git push https://x-access-token:$GH_TOKEN@github.com/Harsh2KumarPrasad/TDS-2025-Jan-GA2.git main
